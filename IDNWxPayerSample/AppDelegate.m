@@ -3,10 +3,11 @@
 //  IDNWxPayerSample
 //
 //  Created by photondragon on 16/5/28.
-//  Copyright © 2016年 photondragon. All rights reserved.
+//  Copyright © 2016年 iosdev.net. All rights reserved.
 //
 
 #import "AppDelegate.h"
+#import "IDNWxPayer.h"
 
 @interface AppDelegate ()
 
@@ -16,8 +17,27 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-	// Override point for customization after application launch.
+
+	[IDNWxPayer initWithAppId:@"wx1234567812345678" merchantId:@"1234567890"]; //
+	[IDNWxPayer setMerchantKey:@"12345678901234567890123456789012"]; //设置商户密钥，仅供测试使用
+	[IDNWxPayer setNotifyUrl:@"http://weixin.app.example.com/index.php"]; //仅供测试使用
 	return YES;
+}
+
+// ios<9.0
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
+{
+	if([IDNWxPayer handleOpenURL:url])
+		return YES;
+	return NO;
+}
+
+// ios>=9.0
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url options:(NSDictionary<NSString *,id> *)options
+{
+	if([IDNWxPayer handleOpenURL:url])
+		return YES;
+	return NO;
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
