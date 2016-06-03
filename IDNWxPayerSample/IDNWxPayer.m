@@ -477,7 +477,7 @@
 
 	//拼接字符串
 	for (NSString* key in sortedKeys) {
-		if (![params[key] isEqualToString:@""] && //忽略值为空的参数
+		if (![[params[key] description] isEqualToString:@""] && //忽略值为空的参数
 			![key isEqualToString:@"sign"] && //忽略sign参数
 			![key isEqualToString:@"key"]) //忽略key参数
 		{
