@@ -186,31 +186,32 @@
 	return [WXApi handleOpenURL:url delegate:[self sharedInstance]];
 }
 
-+ (BOOL)payWithParams:(NSDictionary*)params callback:(void (^)(NSError* error))callback
++ (BOOL)payWithParams:(NSDictionary*)params result:(void (^)(NSError* error))result
 {
-	return [[self sharedInstance] payWithParams:params callback:callback];
+	return [[self sharedInstance] payWithParams:params result:result];
 }
 
-- (BOOL)payWithParams:(NSDictionary*)params callback:(void (^)(NSError* error))callback
+- (BOOL)payWithParams:(NSDictionary*)params result:(void (^)(NSError* error))result
 {
 	if (params.count == 0){
-		[self onFailureCallCallback:callback errorString:@"没有提供支付参数"];
+		[self onFailureCallCallback:result errorString:@"没有提供支付参数"];
 		return FALSE;
 	}
 
 	if([WXApi isWXAppInstalled]==NO){
-		[self onFailureCallCallback:callback errorString:@"没有安装微信客户端"];
+		[self onFailureCallCallback:result errorString:@"没有安装微信客户端"];
 		return FALSE;
 	}
 
 	@synchronized (self) {
-		if(_currentCallback) //之前的支付没有返回
-		{
-			[self onFailureCallCallback:_currentCallback errorString:@"微信支付没有返回"];
-			//return; //不用退出，继续
-		}
+		// 不用管之前有没有回调
+//		if(_currentCallback) //之前的支付没有返回
+//		{
+//			[self onFailureCallCallback:_currentCallback errorString:@"微信支付没有返回"];
+//			//return; //不用退出，继续
+//		}
 
-		_currentCallback = callback;
+		_currentCallback = result;
 	}
 
 	// 生成支付请求
@@ -223,7 +224,7 @@
 	request.nonceStr = params[@"noncestr"];
 	request.sign= params[@"sign"];
 	if([WXApi sendReq:request]==NO){
-		[self onFailureCallCallback:callback errorString:@"发起支付失败"];
+		[self onFailureCallCallback:result errorString:@"发起支付失败"];
 		return FALSE;
 	}
 	return TRUE;
@@ -242,7 +243,7 @@
 		case WXSuccess:
 			break;
 		case WXErrCodeUserCancel:
-			errorString = @"支付取消";
+			errorString = @"用户取消付款";
 			break;
 		case WXErrCodeCommon:
 			errorString = @"普通错误类型";
@@ -401,11 +402,6 @@
 	[self onFailureCallPrepayCallback:callback payParams:nil errorString:errorString];
 }
 
-+ (BOOL)payWithPrepayId:(NSString*)prepayId callback:(void (^)(NSError* error))callback
-{
-	return [[self sharedInstance] payWithPrepayId:prepayId callback:callback];
-}
-
 //生成请求参数
 - (NSDictionary*)genPayParamsWithPrepayId:(NSString*)prepayId
 {
@@ -430,17 +426,21 @@
 	return [params copy];
 }
 
-- (BOOL)payWithPrepayId:(NSString*)prepayId callback:(void (^)(NSError* error))callback
++ (BOOL)payWithPrepayId:(NSString*)prepayId result:(void (^)(NSError* error))result
+{
+	return [[self sharedInstance] payWithPrepayId:prepayId result:result];
+}
+- (BOOL)payWithPrepayId:(NSString*)prepayId result:(void (^)(NSError* error))result
 {
 	if (prepayId.length == 0)
 	{
-		[self onFailureCallCallback:callback errorString:@"没有提供prepayId"];
+		[self onFailureCallCallback:result errorString:@"没有提供prepayId"];
 		return FALSE;
 	}
 
 	NSDictionary* params = [self genPayParamsWithPrepayId:prepayId];
 
-	return [self payWithParams:params callback:callback];
+	return [self payWithParams:params result:result];
 }
 
 // 根据参数生成带sign的xml字符串（做为HTTP POST请求的body）
@@ -487,7 +487,7 @@
 
 	[contentString appendFormat:@"key=%@", _merchantKey]; //添加key字段
 	NSString* md5Sign =[self md5:contentString]; //返回的MD5值已经是大写了
-
+	
 	return md5Sign;
 }
 

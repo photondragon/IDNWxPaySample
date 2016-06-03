@@ -20,7 +20,7 @@
 
 	[IDNWxPayer initWithAppId:@"wx1234567812345678" merchantId:@"1234567890"]; //
 	[IDNWxPayer setMerchantKey:@"12345678901234567890123456789012"]; //设置商户密钥，仅供测试使用
-	[IDNWxPayer setNotifyUrl:@"http://weixin.app.example.com/index.php"]; //仅供测试使用
+	[IDNWxPayer setNotifyUrl:@"http://www.example.com/wxnotify.php"]; //仅供测试使用
 	return YES;
 }
 

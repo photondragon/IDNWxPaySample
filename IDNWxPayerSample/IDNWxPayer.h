@@ -18,18 +18,18 @@
 
 /**
  微信支付助手
- 
+
  微信支付官方IOS文档https://pay.weixin.qq.com/wiki/doc/api/app/app.php?chapter=8_5
 
  使用方法：
  1. 下载微信支付官方SDK加入项目中，地址https://res.wx.qq.com/open/zh_CN/htmledition/res/dev/download/sdk/WeChatSDK1.7.1.zip
  2. 设置项目的URL Schemes： Identifier = weixin, URL Schemes = <your_weixin_app_id>
  3. 链接以下库：
-     libc++.tdb,
-     libsqlite3.tbd,
-     libz.tbd,
-     CoreTelephony.framework,
-     SystemConfiguration.framework
+ libc++.tdb,
+ libsqlite3.tbd,
+ libz.tbd,
+ CoreTelephony.framework,
+ SystemConfiguration.framework
  4. 加入IDNWxPayer.h和IDNWxPayer.m，然后写调用代码
  */
 @interface IDNWxPayer : NSObject
@@ -67,18 +67,18 @@
  *  }
  *  @param payParams 支付参数，一般由服务端返回。必须包含以下字段：appid, partnerid,
  *  prepayid, package, noncestr, timestamp, sign
- *  @param callback  支付结果的回调。这个回调不一定会被调用，因为我有可能在切换到微信客户端
+ *  @param result    接收支付结果的block。这个block不一定会被调用，因为我有可能在切换到微信客户端
  *    后直接关闭了微信，然后再手动打开自己的应用；而不是让微信自动跳回自己的应用。
  *  @return 如果成功打开微信客户端，返回TRUE；否则返回FALSE
- *  
+ *
  *  当函数返回TRUE时，应该显示一个界面，询问用户是否完成付款，就像支付宝付款时切换到另一个页面，
  *  你再手动切换回原来页面，你会发现原来的界面会有个对话框询问你付款是否完成，一般有三个选项：
  *  1. 已完成付款；2. 付款遇到困难；3. 关闭界面
- *  如果付款完成callback被调用，要在callback中自动关闭这个界面；如果callback没有被调用时，
+ *  如果result被调用，要在result中自动关闭这个界面；如果result没有被调用时，
  *  这个界面就一直显示在那，直到用户做出选择时才关闭。如果用户选择“已完成付款”，应该立即去你自
  *  己的服务器上去检测订单是否已支付。
  */
-+ (BOOL)payWithParams:(NSDictionary*)payParams callback:(void (^)(NSError* error))callback;
++ (BOOL)payWithParams:(NSDictionary*)payParams result:(void (^)(NSError* error))result;
 
 #pragma mark - 不安全操作（需要在客户端设置商户密钥，仅供测试使用）
 
@@ -96,7 +96,7 @@
  *  @param amount      订单金额，单位分（必填）
  *  @param orderTitle  订单标题（必填）
  *  @param orderDetail 订单详情（可选）
- *  @param callback    下单结果的回调。如果下单成功，参数payParams返回包含支付参数和签名的字典；如果失败，error中包含错误信息
+ *  @param callback    接收下单结果的block。如果下单成功，参数payParams包含支付参数和签名的字典；如果失败，error中包含错误信息
  */
 + (void)prepayWithOrderId:(NSString*)orderId
 				   amount:(NSInteger)amount
@@ -108,10 +108,10 @@
  *  发起支付
  *  必须先设置merchantKey
  *
- *  @param prepayId 预支付ID。一般由服务端统一下单，得到prepayId，再传给客户端
- *  @param callback 支付结果的回调。这个回调不一定会被调用
+ *  @param prepayId 预支付ID。一般由服务端下单，得到prepayId，再传给客户端
+ *  @param result   接收支付结果的block。这个block不一定会被调用
  *  @return 如果成功打开微信客户端，返回TRUE；否则返回FALSE
  */
-+ (BOOL)payWithPrepayId:(NSString*)prepayId callback:(void (^)(NSError* error))callback;
++ (BOOL)payWithPrepayId:(NSString*)prepayId result:(void (^)(NSError* error))result;
 
 @end

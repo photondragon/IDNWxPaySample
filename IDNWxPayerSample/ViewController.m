@@ -63,7 +63,7 @@
 		[self alert:@"prepayid长度必须是36"];
 		return;
 	}
-	[IDNWxPayer payWithPrepayId:prepayId callback:^(NSError *error) {
+	[IDNWxPayer payWithPrepayId:prepayId result:^(NSError *error) {
 		if(error){
 			NSLog(@"支付失败：%@", error.localizedDescription);
 			[self alert:[NSString stringWithFormat:@"支付失败：%@", error.localizedDescription]];
@@ -92,7 +92,7 @@
 
 //		payParams = [params copy];
 	}
-	[IDNWxPayer payWithParams:payParams callback:^(NSError *error) {
+	[IDNWxPayer payWithParams:payParams result:^(NSError *error) {
 		if(error){
 			NSLog(@"支付失败：%@", error.localizedDescription);
 			[self alert:[NSString stringWithFormat:@"支付失败：%@", error.localizedDescription]];
