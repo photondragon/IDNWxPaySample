@@ -21,21 +21,22 @@
 	[IDNWxPayer initWithAppId:@"wx1234567812345678" merchantId:@"1234567890"]; //
 	[IDNWxPayer setMerchantKey:@"12345678901234567890123456789012"]; //设置商户密钥，仅供测试使用
 	[IDNWxPayer setNotifyUrl:@"http://www.example.com/wxnotify.php"]; //仅供测试使用
+
 	return YES;
 }
 
-// ios<9.0
+// ios < 9.0
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
-	if([IDNWxPayer handleOpenURL:url])
+	if([IDNWxPayer handleOpenURL:url]) //处理从微信客户端跳转回来的url。返回 TRUE 表示成功处理了
 		return YES;
 	return NO;
 }
 
-// ios>=9.0
+// ios >= 9.0
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url options:(NSDictionary<NSString *,id> *)options
 {
-	if([IDNWxPayer handleOpenURL:url])
+	if([IDNWxPayer handleOpenURL:url]) //处理从微信客户端跳转回来的url。返回 TRUE 表示成功处理了
 		return YES;
 	return NO;
 }

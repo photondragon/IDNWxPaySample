@@ -29,7 +29,7 @@
 
 // 客户端下单
 - (IBAction)onClientPrepay:(id)sender {
-	NSString* orderId = @"20160526112848";
+	NSString* orderId = @"20160616112848";
 	NSInteger amount = 1; //金额
 	NSString* orderTitle = @"充值余额";
 
@@ -46,7 +46,7 @@
 			self.textFieldPrepayId.text = payParams[@"prepayid"];
 			self.textViewPayParams.text = [payParams description];
 			self.payParams = payParams;
-			[self alert:@"支付成功"];
+			[self alert:@"下单成功"];
 		}
 	}];
 }
@@ -57,22 +57,25 @@
 	{
 		[self alert:@"没有prepayId参数，请先下单"];
 		return;
-//		prepayId = @"wx201605280911382a08054e2f0596771345";
+//		prepayId = @"wx201606160911382a08054e2f0596771345";
 	}
 	else if(prepayId.length!=36){
 		[self alert:@"prepayid长度必须是36"];
 		return;
 	}
-	[IDNWxPayer payWithPrepayId:prepayId result:^(NSError *error) {
+	BOOL isWxOpened = [IDNWxPayer payWithPrepayId:prepayId result:^(NSError *error) {
 		if(error){
 			NSLog(@"支付失败：%@", error.localizedDescription);
 			[self alert:[NSString stringWithFormat:@"支付失败：%@", error.localizedDescription]];
 		}
 		else{
-			NSLog(@"支付成功");
+			NSLog(@"支付成功（只是“支付”成功）");
 			[self alert:@"支付成功"];
+			// todo 这里还要向你的服务器验证支付结果（检测订单是否完成）
 		}
 	}];
+	if(isWxOpened)
+		; //这里应该显示一个界面来询问支付是否成功（具体做法参考 IDNWxPayer.h 中的函数文档）
 }
 
 - (IBAction)onPayWithParams:(id)sender {
@@ -82,7 +85,7 @@
 		[self alert:@"没有payParams参数，请先下单"];
 		return;
 //		NSMutableDictionary* params = [NSMutableDictionary new];
-//		params[@"prepayid"] = @"wx201605280911382a08054e2f0596771345";
+//		params[@"prepayid"] = @"wx201606160911382a08054e2f0596771345";
 //		params[@"appid"] = @"wx1234567812345678";
 //		params[@"partnerid"] = @"1234567890";
 //		params[@"package"] = @"Sign=WXPay";
@@ -92,17 +95,20 @@
 
 //		payParams = [params copy];
 	}
-	[IDNWxPayer payWithParams:payParams result:^(NSError *error) {
+	BOOL isWxOpened = [IDNWxPayer payWithParams:payParams result:^(NSError *error) {
 		if(error){
 			NSLog(@"支付失败：%@", error.localizedDescription);
 			[self alert:[NSString stringWithFormat:@"支付失败：%@", error.localizedDescription]];
 		}
 		else{
-			NSLog(@"支付成功");
+			NSLog(@"支付成功（只是“支付”成功）");
 			[self alert:@"支付成功"];
+			// todo 这里还要向你的服务器验证支付结果（检测订单是否完成）
 		}
 	}];
 
+	if(isWxOpened)
+		; //这里应该显示一个界面来询问支付是否成功（具体做法参考 IDNWxPayer.h 中的函数文档）
 }
 
 - (IBAction)onTapBlank:(id)sender {
