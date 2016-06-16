@@ -1,3 +1,19 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [iOS 微信支付助手 IDNWxPayer](#ios-%E5%BE%AE%E4%BF%A1%E6%94%AF%E4%BB%98%E5%8A%A9%E6%89%8B-idnwxpayer)
+  - [使用方法](#%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95)
+    - [项目准备](#%E9%A1%B9%E7%9B%AE%E5%87%86%E5%A4%87)
+    - [微信支付流程](#%E5%BE%AE%E4%BF%A1%E6%94%AF%E4%BB%98%E6%B5%81%E7%A8%8B)
+    - [编写支付代码](#%E7%BC%96%E5%86%99%E6%94%AF%E4%BB%98%E4%BB%A3%E7%A0%81)
+      - [正常情况😄](#%E6%AD%A3%E5%B8%B8%E6%83%85%E5%86%B5%F0%9F%98%84)
+      - [情况2🙁](#%E6%83%85%E5%86%B52%F0%9F%99%81)
+      - [情况3😠](#%E6%83%85%E5%86%B53%F0%9F%98%A0)
+  - [参考](#%E5%8F%82%E8%80%83)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # iOS 微信支付助手 IDNWxPayer
 
 demo示例程序 <https://github.com/photondragon/IDNWxPaySample>  
@@ -60,7 +76,7 @@ IDNWxPayer 对微信支付ios端的整个支付流程进行了封装，把复杂
 
 现在你可以开始编写支付代码了，不过在这之前，最好先了解一下微信支付流程
 
-### 微信支付流程：
+### 微信支付流程
 1. 向微信下单，得到prepayId（建议在服务端实现）
 2. 根据prepayId生成**包含签名**的“支付请求参数”（建议在服务端实现）
 3. 你的客户端发起支付（需要第2步生成的支付请求参数）
