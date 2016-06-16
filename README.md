@@ -1,13 +1,14 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
 - [iOS 微信支付助手 IDNWxPayer](#ios-%E5%BE%AE%E4%BF%A1%E6%94%AF%E4%BB%98%E5%8A%A9%E6%89%8B-idnwxpayer)
   - [使用方法](#%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95)
     - [项目准备](#%E9%A1%B9%E7%9B%AE%E5%87%86%E5%A4%87)
     - [微信支付流程](#%E5%BE%AE%E4%BF%A1%E6%94%AF%E4%BB%98%E6%B5%81%E7%A8%8B)
     - [编写支付代码](#%E7%BC%96%E5%86%99%E6%94%AF%E4%BB%98%E4%BB%A3%E7%A0%81)
-      - [正常情况😄](#%E6%AD%A3%E5%B8%B8%E6%83%85%E5%86%B5%F0%9F%98%84)
-      - [情况2🙁](#%E6%83%85%E5%86%B52%F0%9F%99%81)
-      - [情况3😠](#%E6%83%85%E5%86%B53%F0%9F%98%A0)
+      - [正常情况](#%E6%AD%A3%E5%B8%B8%E6%83%85%E5%86%B5)
+      - [情况2](#%E6%83%85%E5%86%B52)
+      - [情况3](#%E6%83%85%E5%86%B53)
   - [参考](#%E5%8F%82%E8%80%83)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -83,7 +84,7 @@ IDNWxPayer 对微信支付ios端的整个支付流程进行了封装，把复杂
 
 ### 编写支付代码
 
-#### 正常情况😄
+#### 正常情况
 
 如果你们的服务端小伙伴把微信支付流程的第1，2步都搞定了，把支付请求参数传给了客户端😄，那么你只需要调用 +payWithParams:result: 方法就可以发起微信支付了，示例代码如下：
 
@@ -101,7 +102,7 @@ IDNWxPayer 对微信支付ios端的整个支付流程进行了封装，把复杂
 ```
 **注意**：result这个block是用来接收支付结果的，error==nil表示支付成功，否则表示支付失败。但是result这个block**不一定会被调用**，因为你可以在跳转到微信客户端后直接关闭微信，然后手动点开自己的应用，而不是让微信自动跳回。这种情况怎么处理可以到 IDNWxPayer.h 里去看函数文档。
 
-#### 情况2🙁
+#### 情况2
 
 如果你们的服务端小伙伴搞定了微信支付流程的第1步，然后给了你一个prepayid🙁，那么你可以调用 +payWithPrepayId:result: 方法发起微信支付，但必须在初始化的时候调用 +setMerchantKey: 设置商户密钥（用于签名），示例代码如下：
 
@@ -118,7 +119,7 @@ IDNWxPayer 对微信支付ios端的整个支付流程进行了封装，把复杂
 
 ```
 
-#### 情况3😠
+#### 情况3
 
 如果你们的服务端小伙伴连微信支付流程的第1步都还没搞定😠，怎么办呢？当然有办法，我们可以自己向微信服务器下单（前提是在初始化的时候设置了merchantKey和notifyUrl）。  
 先调用 +prepayWithOrderId:amount:orderTitle:orderDetail:callback: 方法下单（参数你就随便填吧，反正只是测试），下单成功后通过 callback 得到支付请求参数，再调用 +payWithParams:result: 发起支付，示例代码如下：
