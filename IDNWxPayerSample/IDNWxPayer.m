@@ -203,6 +203,11 @@
 		return FALSE;
 	}
 
+	if([WXApi isWXAppSupportApi]==NO){
+		[self onFailureCallCallback:result errorString:@"微信客户端版本过低"];
+		return FALSE;
+	}
+
 	@synchronized (self) {
 		// 不用管之前有没有回调
 //		if(_currentCallback) //之前的支付没有返回
